@@ -45,8 +45,8 @@ class TypingTest{
 
             while(i < sentence.size()){
                 int ch = getch();
-
-                if (ch == 127 || ch == KEY_BACKSPACE || ch == '\b') {
+                printw("%c",ch);
+                if (ch == 127 || ch == KEY_BACKSPACE || ch == '\b' || ch == '%') {
                     if (i != 0) {
                         i--;
                         user_input.pop_back();
@@ -55,9 +55,9 @@ class TypingTest{
                     continue;
                 }
 
-                // if (ch == '\n') {
-                //     break;
-                // }
+                if (ch == '\n') {
+                    break;
+                }
 
                 user_input[i++] = ch;
                 refresh_text();
@@ -87,6 +87,14 @@ class TypingTest{
         void calculate_details(){
             // error count
             for (int i = 0; i < sentence.size(); i++){
+
+                if (sentence[i] >= 'A' && sentence[i] <= 'Z'){
+                    sentence[i] += 32;
+                }
+                if (user_input[i] >= 'A' && user_input[i] <= 'Z'){
+                    user_input[i] += 32;
+                }
+
                 if (sentence[i] != user_input[i]){
                     errors++;
                 }

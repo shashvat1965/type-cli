@@ -14,6 +14,9 @@ int main(){
         lines.push_back(line);
     }
 
+    srand(time(0));
+
+
     TypingTest typingTest = TypingTest(lines[rand() % lines.size()]);
     typingTest.start();
 
