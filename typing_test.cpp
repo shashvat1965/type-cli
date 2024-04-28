@@ -14,18 +14,17 @@ class TypingTest{
     int words;
     float time;
     int wpm;
-    int accuracy;
+    float accuracy;
 
     public:
         TypingTest(std::string sentence){
             this->sentence = sentence;
-            user_input = "";
             errors = 0;
             words = 0;
             time = 0;
             wpm = 0;
             accuracy = 0;
-
+            user_input = "";
         };
 
         void start(){
@@ -37,29 +36,25 @@ class TypingTest{
 
             printw("%s", sentence.c_str());
             printw("\n");
-
             int i = 0;
             printw("%s", user_input.c_str());
             printw("%s", "Type to start");
-            printw("\n");
-
             while(i < sentence.size()){
                 int ch = getch();
-                printw("%c",ch);
-                if (ch == 127 || ch == KEY_BACKSPACE || ch == '\b' || ch == '%') {
-                    if (i != 0) {
-                        i--;
+
+                if (ch == KEY_BACKSPACE || ch == KEY_DC || ch == 127) {
                         user_input.pop_back();
+                        i--;
                         refresh_text();
+                        continue;
                     }
-                    continue;
-                }
 
                 if (ch == '\n') {
                     break;
                 }
 
-                user_input[i++] = ch;
+                user_input += char(ch);
+                i++;
                 refresh_text();
             }
             endwin();
@@ -74,27 +69,19 @@ class TypingTest{
         }
 
         void refresh_text(){
-            calculate_details();
             clear();
             printw("%s", sentence.c_str());
             printw("\n");
             printw("%s", user_input.c_str());
-            printw("\n");
-            printw("%s", "Typing speed: ");
-            printw("%d", wpm);
         };
 
         void calculate_details(){
+            // reset values
+            errors = 0;
+            words = 0;
+
             // error count
             for (int i = 0; i < sentence.size(); i++){
-
-                if (sentence[i] >= 'A' && sentence[i] <= 'Z'){
-                    sentence[i] += 32;
-                }
-                if (user_input[i] >= 'A' && user_input[i] <= 'Z'){
-                    user_input[i] += 32;
-                }
-
                 if (sentence[i] != user_input[i]){
                     errors++;
                 }
@@ -106,10 +93,11 @@ class TypingTest{
                     words++;
                 }
             }
+            words++;
 
             // calculate wpm and accuracy
             wpm = words / time * 60;
-            accuracy = (sentence.size() - errors) / sentence.size() * 100;
+            accuracy = (sentence.size() - (float)errors) / sentence.size() * 100;
         }
 
         void display(){
@@ -118,6 +106,8 @@ class TypingTest{
             std::cout << "Words: " << words << std::endl;
             std::cout << "WPM: " << wpm << std::endl;
             std::cout << "Accuracy: " << accuracy << "%" << std::endl;
+            std::cout << "\n";
+            std::cout << user_input << std::endl;
         }
 
 };

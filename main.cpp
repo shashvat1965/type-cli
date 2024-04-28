@@ -11,12 +11,17 @@ int main(){
     std::vector<std::string> lines;
 
     while (std::getline(file, line)){
+
+        for (int i = 0; i < line.size(); i++){
+            if (line[i] >= 'A' && line[i] <= 'Z'){
+                line[i] += 32;
+            }
+        }
+
         lines.push_back(line);
     }
 
     srand(time(0));
-
-
     TypingTest typingTest = TypingTest(lines[rand() % lines.size()]);
     typingTest.start();
 
